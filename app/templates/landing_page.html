@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Archaeologist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #080B14;
+            color: #E2E8F0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+        }
+
+        .logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #E2E8F0;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #64748B;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: #141928;
+            border: 1px solid #1F2640;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748B;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0F1320;
+            border: 1px solid #1F2640;
+            border-radius: 8px;
+            color: #E2E8F0;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #6366F1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        input[type="text"]::placeholder {
+            color: #64748B;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            padding: 12px 24px;
+            background: #6366F1;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .analyze-btn:hover {
+            background: #5558E3;
+        }
+
+        .analyze-btn:disabled {
+            background: #1F2640;
+            color: #64748B;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 16px;
+            border: 3px solid #1F2640;
+            border-top-color: #6366F1;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: #64748B;
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .kpi-item {
+            background: #0F1320;
+            border: 1px solid #1F2640;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #E2E8F0;
+            margin-bottom: 4px;
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-low {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .severity-medium {
+            background: rgba(249, 115, 22, 0.1);
+            color: #F97316;
+        }
+
+        .severity-high {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .tech-stack {
+            margin-bottom: 20px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .tech-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-pill {
+            background: #1F2640;
+            color: #6366F1;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .summary-box {
+            background: #0F1320;
+            border-left: 3px solid #6366F1;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .summary-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #CBD5E1;
+        }
+
+        .summary-text strong {
+            color: #6366F1;
+            font-weight: 600;
+        }
+
+        .view-report-btn {
+            width: 100%;
+            padding: 12px 24px;
+            background: #0F1320;
+            color: #6366F1;
+            border: 1px solid #1F2640;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .view-report-btn:hover {
+            background: #1F2640;
+            border-color: #6366F1;
+        }
+
+        .error {
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #EF4444;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .error-text {
+            font-size: 14px;
+            color: #EF4444;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 24px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="2" width="8" height="20" rx="1" stroke="#6366F1" stroke-width="2"/>
+                    <rect x="5" y="6" width="14" height="12" rx="1" stroke="#6366F1" stroke-width="2"/>
+                    <rect x="2" y="10" width="20" height="8" rx="1" stroke="#6366F1" stroke-width="2"/>
+                </svg>
+            </div>
+            <h1 class="title">Stack Archaeologist</h1>
+            <p class="subtitle">Analyze abandoned GitHub repositories and uncover their architectural secrets</p>
+        </div>
+
+        <div class="card">
+            <form id="analyzeForm">
+                <div class="form-group">
+                    <label for="repoUrl">GitHub Repository URL</label>
+                    <input 
+                        type="text" 
+                        id="repoUrl" 
+                        name="repoUrl" 
+                        placeholder="https://github.com/username/repository"
+                        required
+                    >
+                </div>
+                <button type="submit" class="analyze-btn" id="analyzeBtn">
+                    Analyze Repository
+                </button>
+            </form>
+
+            <div class="error" id="errorBox">
+                <p class="error-text" id="errorText"></p>
+            </div>
+        </div>
+
+        <div class="loading" id="loadingBox">
+            <div class="spinner"></div>
+            <p class="loading-text">Analyzing repository...</p>
+        </div>
+
+        <div class="results" id="resultsBox">
+            <div class="card">
+                <div class="kpi-grid">
+                    <div class="kpi-item">
+                        <div class="kpi-value" id="daysAbandoned">-</div>
+                        <div class="kpi-label">Days Abandoned</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value" id="totalCommits">-</div>
+                        <div class="kpi-label">Total Commits</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">
+                            <span class="severity-badge" id="severityBadge">-</span>
+                        </div>
+                        <div class="kpi-label">Severity</div>
+                    </div>
+                </div>
+
+                <div class="tech-stack">
+                    <div class="section-label">Detected Stack</div>
+                    <div class="tech-pills" id="techStack"></div>
+                </div>
+
+                <div class="summary-box">
+                    <div class="summary-text" id="summaryText"></div>
+                </div>
+
+                <button class="view-report-btn" id="viewReportBtn">
+                    View Full Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('analyzeForm');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loadingBox = document.getElementById('loadingBox');
+        const resultsBox = document.getElementById('resultsBox');
+        const errorBox = document.getElementById('errorBox');
+        const errorText = document.getElementById('errorText');
+        const viewReportBtn = document.getElementById('viewReportBtn');
+
+        let currentReportFilename = null;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const repoUrl = document.getElementById('repoUrl').value.trim();
+            
+            if (!repoUrl) {
+                showError('Please enter a repository URL');
+                return;
+            }
+
+            hideError();
+            hideResults();
+            showLoading();
+            disableForm();
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ repo_url: repoUrl })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Analysis failed');
+                }
+
+                currentReportFilename = data.report_filename;
+                displayResults(data);
+                showResults();
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                hideLoading();
+                enableForm();
+            }
+        });
+
+        viewReportBtn.addEventListener('click', () => {
+            if (currentReportFilename) {
+                window.location.href = `/api/report/${currentReportFilename}`;
+            }
+        });
+
+        function displayResults(data) {
+            document.getElementById('daysAbandoned').textContent = data.days_abandoned || '-';
+            document.getElementById('totalCommits').textContent = data.total_commits || '-';
+
+            const severityBadge = document.getElementById('severityBadge');
+            const severity = (data.severity || 'medium').toLowerCase();
+            severityBadge.textContent = severity.toUpperCase();
+            severityBadge.className = 'severity-badge severity-' + severity;
+
+            const techStack = document.getElementById('techStack');
+            techStack.innerHTML = '';
+            if (data.tech_stack && data.tech_stack.length > 0) {
+                data.tech_stack.forEach(tech => {
+                    const pill = document.createElement('span');
+                    pill.className = 'tech-pill';
+                    pill.textContent = tech;
+                    techStack.appendChild(pill);
+                });
+            } else {
+                const pill = document.createElement('span');
+                pill.className = 'tech-pill';
+                pill.textContent = 'Unknown';
+                techStack.appendChild(pill);
+            }
+
+            const summaryText = document.getElementById('summaryText');
+            let summary = data.summary || 'Analysis complete. View the full report for details.';
+            summary = summary.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            summaryText.innerHTML = summary;
+        }
+
+        function showLoading() {
+            loadingBox.classList.add('active');
+        }
+
+        function hideLoading() {
+            loadingBox.classList.remove('active');
+        }
+
+        function showResults() {
+            resultsBox.classList.add('active');
+        }
+
+        function hideResults() {
+            resultsBox.classList.remove('active');
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorBox.classList.add('active');
+        }
+
+        function hideError() {
+            errorBox.classList.remove('active');
+        }
+
+        function disableForm() {
+            analyzeBtn.disabled = true;
+            document.getElementById('repoUrl').disabled = true;
+        }
+
+        function enableForm() {
+            analyzeBtn.disabled = false;
+            document.getElementById('repoUrl').disabled = false;
+        }
+    </script>
+</body>
+</html>
