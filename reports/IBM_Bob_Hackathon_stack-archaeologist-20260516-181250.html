@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Report - IBM_Bob_Hackathon_stack-archaeologist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: none;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #080B14;
+            color: #E2E8F0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 52px;
+            background: #080B14;
+            border-bottom: 1px solid #1F2640;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            z-index: 100;
+        }
+        
+        .navbar-brand {
+            font-size: 13px;
+            color: #64748B;
+            font-weight: 500;
+        }
+        
+        .navbar-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .repo-name {
+            font-size: 13px;
+            color: #E2E8F0;
+            font-weight: 500;
+        }
+        
+        .analyzed-date {
+            font-size: 12px;
+            color: #64748B;
+        }
+        
+        /* KPI Strip */
+        .kpi-strip {
+            margin-top: 52px;
+            background: #0F1320;
+            border-bottom: 1px solid #1F2640;
+            padding: 24px 48px;
+        }
+        
+        .kpi-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .kpi-item {
+            flex: 1;
+            text-align: center;
+            padding: 0 20px;
+            border-right: 1px solid #1F2640;
+        }
+        
+        .kpi-item:last-child {
+            border-right: none;
+        }
+        
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #E2E8F0;
+            margin-bottom: 6px;
+        }
+        
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        
+        /* Tech Stack Row */
+        .tech-stack-row {
+            background: #080B14;
+            padding: 16px 48px;
+            border-bottom: 1px solid #1F2640;
+        }
+        
+        .tech-stack-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .tech-stack-label {
+            font-size: 11px;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 500;
+        }
+        
+        .tech-pill {
+            background: #1F2640;
+            color: #6366F1;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 32px 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .report-card {
+            background: #141928;
+            border: 1px solid #1F2640;
+            border-radius: 12px;
+            padding: 28px 32px;
+        }
+        
+        .card-header {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #1F2640;
+        }
+        
+        .card-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #64748B;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #CBD5E1;
+        }
+        
+        .card-body strong {
+            color: #6366F1;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 32px 48px;
+            border-top: 1px solid #1F2640;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer-brand {
+            font-size: 13px;
+            color: #E2E8F0;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .footer-credit {
+            font-size: 12px;
+            color: #64748B;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .navbar {
+                padding: 0 24px;
+            }
+            
+            .kpi-strip {
+                padding: 20px 24px;
+            }
+            
+            .kpi-container {
+                flex-wrap: wrap;
+            }
+            
+            .kpi-item {
+                flex: 1 1 50%;
+                border-right: none;
+                border-bottom: 1px solid #1F2640;
+                padding: 16px 0;
+            }
+            
+            .kpi-item:nth-last-child(-n+2) {
+                border-bottom: none;
+            }
+            
+            .tech-stack-row {
+                padding: 16px 24px;
+            }
+            
+            .main-content {
+                padding: 24px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer {
+                padding: 24px;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .navbar {
+                padding: 0 16px;
+            }
+            
+            .navbar-info {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 4px;
+            }
+            
+            .kpi-strip {
+                padding: 16px;
+            }
+            
+            .kpi-item {
+                flex: 1 1 100%;
+            }
+            
+            .tech-stack-row {
+                padding: 12px 16px;
+            }
+            
+            .main-content {
+                padding: 16px;
+            }
+            
+            .report-card {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">Stack Archaeologist</div>
+        <div class="navbar-info">
+            <div class="repo-name">IBM_Bob_Hackathon_stack-archaeologist</div>
+            <div class="analyzed-date">Analyzed on 2026-05-16 18:12:50</div>
+        </div>
+    </nav>
+    
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+        <div class="kpi-container">
+            <div class="kpi-item">
+                <div class="kpi-value">0</div>
+                <div class="kpi-label">Days Abandoned</div>
+            </div>
+            <div class="kpi-item">
+                <div class="kpi-value">1</div>
+                <div class="kpi-label">Total Commits</div>
+            </div>
+            <div class="kpi-item">
+                <div class="kpi-value">2026-05-16</div>
+                <div class="kpi-label">Last Commit</div>
+            </div>
+            <div class="kpi-item">
+                <div class="kpi-value" style="color: #10B981;">LOW</div>
+                <div class="kpi-label">Severity</div>
+            </div>
+            <div class="kpi-item">
+                <div class="kpi-value" style="font-size: 16px;">Tanmay-Dalvi</div>
+                <div class="kpi-label">Top Contributor</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tech Stack Row -->
+    <div class="tech-stack-row">
+        <div class="tech-stack-container">
+            <span class="tech-stack-label">Detected Stack</span>
+            <span class="tech-pill">Python</span>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="cards-grid">
+            <!-- Architecture Analysis -->
+            <div class="report-card">
+                <div class="card-header">
+                    <div class="card-title">Architecture Analysis</div>
+                </div>
+                <div class="card-body">
+                    <p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Main Purpose</strong>: Based on the repository structure, IBM_Bob_Hackathon_stack-archaeologist appears to be a software project with 16 files using technologies including requirements.txt.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Architecture Pattern</strong>: The project follows a standard file organization pattern. No test files detected. Documentation exists via README.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Key Components</strong>: The codebase is organized into 7 directories, suggesting a modular structure with separated concerns.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Data Flow</strong>: Based on the file structure, data likely flows through standard application layers with clear separation of concerns.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">External Dependencies</strong>: The project uses 1 dependency management file(s), indicating integration with external libraries and frameworks.</p>
+                </div>
+            </div>
+            
+            <!-- Cause of Death -->
+            <div class="report-card">
+                <div class="card-header">
+                    <div class="card-title">Cause of Death</div>
+                </div>
+                <div class="card-body">
+                    <p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Primary Cause</strong>: The archaeological evidence suggests IBM_Bob_Hackathon_stack-archaeologist fell silent 0 days ago, making it recently dormant. With 1 commits in its history, this repository once showed signs of active development.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Warning Signs</strong>: Analysis of commit patterns reveals that 0.0% of commits contained warning keywords (fix, bug, TODO, WIP, etc.), indicating potential technical challenges during development.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Timeline of Decline</strong>: The repository&#x27;s 1 commits tell a story of development that eventually ceased. The final commits occurred 0 days ago, marking the point where active development stopped.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Severity Assessment</strong>: Based on the time elapsed and commit patterns, this abandonment is classified as <strong style="color: #6366F1; font-weight: 600;">LOW</strong> severity. The repository has been silent for 0 days, placing it in the &quot;recently dormant&quot; category.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Recovery Prognosis</strong>: Revival is feasible with moderate effort.</p>
+                </div>
+            </div>
+            
+            <!-- Salvageable Components -->
+            <div class="report-card">
+                <div class="card-header">
+                    <div class="card-title">Salvageable Components</div>
+                </div>
+                <div class="card-body">
+                    <p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">High-Value Components</strong>: Without test files, code quality assessment is challenging, but core functionality may still be salvageable.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Utility Functions</strong>: Based on the file structure, there are likely utility functions and helper modules that could be extracted and reused in modern projects.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Configuration Patterns</strong>: Documentation exists that could provide valuable insights into configuration and setup patterns.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Documentation Value</strong>: README and documentation files are present, providing valuable context for understanding the codebase.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Test Suite</strong>: No test suite detected, which increases the risk of salvaging components without understanding their full behavior.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Modern Compatibility</strong>: Based on the 0 days since last activity, dependencies will likely need updating to work with modern toolchains and frameworks.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Overall Assessment</strong>: Approximately <strong style="color: #6366F1; font-weight: 600;">55%</strong> of this codebase appears salvageable for reuse in modern projects, with appropriate updates and refactoring.</p>
+                </div>
+            </div>
+            
+            <!-- Revival Plan -->
+            <div class="report-card">
+                <div class="card-header">
+                    <div class="card-title">Revival Plan</div>
+                </div>
+                <div class="card-body">
+                    <p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Effort Estimation</strong>: Revival of this project will require approximately <strong style="color: #6366F1; font-weight: 600;">10 developer-days</strong> of effort, classified as a <strong style="color: #6366F1; font-weight: 600;">small (10-20 days)</strong> project.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Priority Tasks</strong>:
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">1.</strong> <strong style="color: #6366F1; font-weight: 600;">Dependency Audit</strong> (Days 1-3): Update all dependencies to current versions, resolve conflicts</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">2.</strong> <strong style="color: #6366F1; font-weight: 600;">Environment Setup</strong> (Days 3-5): Establish modern development environment and toolchain</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">3.</strong> <strong style="color: #6366F1; font-weight: 600;">Core Functionality Restoration</strong> (Days 5-5): Fix breaking changes, restore basic functionality</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">4.</strong> <strong style="color: #6366F1; font-weight: 600;">Testing &amp; Validation</strong> (Days 5-5): Create comprehensive test suite</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">5.</strong> <strong style="color: #6366F1; font-weight: 600;">Documentation Update</strong> (Days 5-10): Update README, add setup instructions, document changes</div></p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Dependency Updates</strong>: All dependencies will need updating due to 0 days of abandonment. Expect breaking changes in major dependencies.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Main Risks</strong>:
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">1.</strong> <strong style="color: #6366F1; font-weight: 600;">Dependency Hell</strong>: Outdated dependencies may have breaking changes</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">2.</strong> <strong style="color: #6366F1; font-weight: 600;">Lost Knowledge</strong>: Original developers&#x27; context is unavailable</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">3.</strong> <strong style="color: #6366F1; font-weight: 600;">Hidden Dependencies</strong>: Undocumented system requirements may exist</div></p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Team Requirements</strong>:
+<div style="margin: 10px 0; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #6366F1;">•</span><strong style="color: #6366F1; font-weight: 600;">Team Size</strong>: 1 developer</div>
+<div style="margin: 10px 0; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #6366F1;">•</span><strong style="color: #6366F1; font-weight: 600;">Skills Needed</strong>: Experience with the detected tech stack, dependency management, refactoring</div>
+<div style="margin: 10px 0; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #6366F1;">•</span><strong style="color: #6366F1; font-weight: 600;">Time Commitment</strong>: 3 weeks at full-time capacity</div></p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Timeline</strong>: Realistic timeline is <strong style="color: #6366F1; font-weight: 600;">3 weeks</strong> with a team of 1, assuming full-time dedication.</p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Success Metrics</strong>:
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">1.</strong> All dependencies updated to current versions</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">2.</strong> Application starts without errors</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">3.</strong> Core functionality operational</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">4.</strong> Test coverage &gt; 70%</div>
+<div style="margin: 12px 0;"><strong style="color: #6366F1;">5.</strong> Documentation complete and accurate</div></p><p style="margin: 16px 0; line-height: 1.8;"><strong style="color: #6366F1; font-weight: 600;">Risk Level</strong>: <strong style="color: #6366F1; font-weight: 600;">LOW</strong> - Low risk, good candidate for revival.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-brand">Stack Archaeologist</div>
+        <div class="footer-credit">Built using IBM Bob IDE and Google Gemini</div>
+    </footer>
+</body>
+</html>
